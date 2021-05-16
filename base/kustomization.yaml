@@ -1,0 +1,4 @@
+namespace: eth-node
+resources:
+- deploy.yaml
+- service.yaml

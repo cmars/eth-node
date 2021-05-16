@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openethereum
+  namespace: ethnode
+  labels:
+    app: openethereum
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: openethereum
+  template:
+    metadata:
+      labels:
+        app: openethereum
+    spec:
+      containers:
+      - name: openethereum
+        image: openethereum/openethereum:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "4"
+            memory: "8Gi"
+        volumeMounts:
+        - name: config
+          mountPath: /etc/openethereum
+        command:
+        - "/home/openethereum/openethereum"
+        - "--base-path"
+        - "/data/openethereum"
+        - "--config"
+        - "/etc/openethereum/config.toml"
+        - "--secretstore-http-port"
+        - "8082"
+        - "--secretstore-port"
+        - "8083"
+        - "--jsonrpc-port"
+        - "8545"
+        - "--ws-port"
+        - "8546"
+        - "--port"
+        - "30303"
+        - "--metrics"
+        ports:
+        - name: metrics
+          containerPort: 3000
+          protocol: TCP
+        - name: secrets-http
+          containerPort: 8082
+          protocol: TCP
+        - name: secrets
+          containerPort: 8083
+          protocol: TCP
+        - name: ui
+          containerPort: 8180
+          protocol: TCP
+        - name: jsonrpc
+          containerPort: 8545
+          protocol: TCP
+        - name: ws
+          containerPort: 8546
+          protocol: TCP
+        - name: node
+          containerPort: 30303
+          protocol: TCP
+        - name: discovery
+          containerPort: 30303
+          protocol: UDP
+      volumes:
+      - name: config
+        configMap:
+          name: openethereum-config

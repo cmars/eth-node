@@ -1,0 +1,19 @@
+namespace: eth-node
+bases:
+- ../base
+resources:
+- pvc.yaml
+namePrefix: mainnet-
+patches:
+- path: deploy-patch.yaml
+  target:
+    kind: Deployment
+    name: openethereum
+configMapGenerator:
+- name: openethereum-config
+  files:
+  - config.toml
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app: openethereum
