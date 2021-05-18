@@ -1,28 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: openethereum
+  name: geth
 spec:
   selector:
-    app: openethereum
+    app: geth
   ports:
-  - name: metrics
-    port: 3000
-    targetPort: 3000
-    protocol: TCP
-  - name: jsonrpc
+  - name: http-rpc
     port: 8545
     targetPort: 8545
     protocol: TCP
-  - name: ws
+  - name: ws-rpc
     port: 8546
     targetPort: 8546
     protocol: TCP
-  - name: node
+  - name: peer
     port: 30303
     targetPort: 30303
     protocol: TCP
-  - name: discovery
-    port: 30303
-    targetPort: 30303
-    protocol: UDP

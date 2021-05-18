@@ -3,16 +3,10 @@
   value:
     name: data
     persistentVolumeClaim:
-      claimName: openethereum-data-pvc
+      claimName: geth-data-pvc
       readOnly: false
 - op: add
   path: /spec/template/spec/containers/0/volumeMounts/-
   value:
     name: data
-    mountPath: /data/openethereum
-- op: add
-  path: /spec/template/spec/securityContext
-  value:
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
+    mountPath: /root

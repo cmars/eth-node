@@ -10,10 +10,10 @@ patches:
     kind: Deployment
     name: openethereum
 configMapGenerator:
-- name: openethereum-config
+- name: geth-config
   files:
   - config.toml
   options:
     disableNameSuffixHash: true
     labels:
-      app: openethereum
+      app: geth

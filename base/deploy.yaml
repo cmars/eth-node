@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openethereum
-  namespace: ethnode
+  name: geth
+  namespace: eth-node
   labels:
-    app: openethereum
+    app: geth
 spec:
   replicas: 1
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: openethereum
+      app: geth
   template:
     metadata:
       labels:
-        app: openethereum
+        app: geth
     spec:
       containers:
-      - name: openethereum
-        image: openethereum/openethereum:latest
+      - name: geth
+        image: ethereum/client-go:stable
         imagePullPolicy: Always
         resources:
           requests:
@@ -26,50 +26,28 @@ spec:
             memory: "8Gi"
         volumeMounts:
         - name: config
-          mountPath: /etc/openethereum
+          mountPath: /etc/geth
         command:
-        - "/home/openethereum/openethereum"
-        - "--base-path"
-        - "/data/openethereum"
+        - "geth"
         - "--config"
-        - "/etc/openethereum/config.toml"
-        - "--secretstore-http-port"
-        - "8082"
-        - "--secretstore-port"
-        - "8083"
-        - "--jsonrpc-port"
-        - "8545"
-        - "--ws-port"
-        - "8546"
-        - "--port"
-        - "30303"
-        - "--metrics"
+        - "/etc/geth/config.toml"
+        - "--http"
+        - "--ws"
+        - "--ipcdisable"
         ports:
-        - name: metrics
-          containerPort: 3000
-          protocol: TCP
-        - name: secrets-http
-          containerPort: 8082
-          protocol: TCP
-        - name: secrets
-          containerPort: 8083
-          protocol: TCP
-        - name: ui
-          containerPort: 8180
-          protocol: TCP
-        - name: jsonrpc
+        - name: http-rpc
           containerPort: 8545
           protocol: TCP
-        - name: ws
+        - name: ws-rpc
           containerPort: 8546
           protocol: TCP
-        - name: node
+        - name: dashboard
+          containerPort: 8080
+          protocol: TCP
+        - name: peer
           containerPort: 30303
           protocol: TCP
-        - name: discovery
-          containerPort: 30303
-          protocol: UDP
       volumes:
       - name: config
         configMap:
-          name: openethereum-config
+          name: geth-config
