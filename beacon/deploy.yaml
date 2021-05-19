@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prysm
+  namespace: eth-node
+  labels:
+    app: prysm
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: prysm
+  template:
+    metadata:
+      labels:
+        app: prysm
+    spec:
+      containers:
+      - name: prysm-beacon-node
+        image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        command:
+        - "/app/cmd/beacon-chain/beacon-chain"
+        - "--accept-terms-of-use"
+        - "--datadir=/data"
+        - "--rpc-host=0.0.0.0"
+        - "--monitoring-host=0.0.0.0"
+        - "--http-web3provider=http://mainnet-geth.eth-node.svc.cluster.local:8545"
+        ports:
+        - name: grpc
+          containerPort: 4000
+          protocol: TCP
+        - name: libp2p
+          containerPort: 13000
+          protocol: TCP
+        - name: discv5
+          containerPort: 12000
+          protocol: UDP
+        - name: metrics
+          containerPort: 8081
+          protocol: TCP
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: prysm-data-pvc
+          readOnly: false

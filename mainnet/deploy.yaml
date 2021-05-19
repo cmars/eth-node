@@ -27,12 +27,23 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/geth
+        - name: data
+          mountPath: /root
         command:
         - "geth"
         - "--config"
         - "/etc/geth/config.toml"
         - "--http"
+        - "--http.addr"
+        - "0.0.0.0"
+        - "--http.api"
+        - "admin,debug,web3,eth,txpool,net"
+        - "--http.vhosts"
+        - "*"
         - "--ws"
+        - "--ws.addr"
+        - "0.0.0.0"
+        - "--graphql"
         - "--ipcdisable"
         ports:
         - name: http-rpc
@@ -51,3 +62,7 @@ spec:
       - name: config
         configMap:
           name: geth-config
+      - name: data
+        persistentVolumeClaim:
+          claimName: geth-data-pvc
+          readOnly: false

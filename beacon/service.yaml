@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prysm
+spec:
+  selector:
+    app: prysm
+  ports:
+  - name: grpc
+    port: 4000
+    targetPort: 4000
+    protocol: TCP
+  - name: libp2p
+    port: 13000
+    targetPort: 13000
+    protocol: TCP
+  - name: discv5
+    port: 12000
+    targetPort: 12000
+    protocol: UDP
+  - name: metrics
+    port: 8081
+    targetPort: 8081
+    protocol: TCP

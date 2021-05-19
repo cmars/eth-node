@@ -1,0 +1,6 @@
+namespace: eth-node
+resources:
+- deploy.yaml
+- pvc.yaml
+- service.yaml
+namePrefix: beacon-
